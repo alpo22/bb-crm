@@ -5,8 +5,6 @@
 require __DIR__ . '/secrets.php';
 require __DIR__ . '/http-verbs.php';
 
-DEFINE('EMAIL_OCTOPUS_LIST_ID', 'ebe8335f-e12c-11eb-96e5-06b4694bee2a');
-
 $liveDbLink = mysqli_connect(SECRET_CRM_DB_SERVER, SECRET_CRM_DB_USER, SECRET_CRM_DB_PASS, SECRET_CRM_DB_NAME) or die('Database error: ' . mysqli_error($liveDbLink));
 
 switch ($_SERVER['REQUEST_METHOD']) {
@@ -220,8 +218,8 @@ function updateEmailOctopusAsNecessary($_PUT)
     //11.
     if (!$_PUT['isInactive'] && !$_PUT['dontEmail'] && $_PUT['isCandidate'] && $_PUT['isTemplate']) {
       //12.
-      $emailOctopusContactId = addContactToList(EMAIL_OCTOPUS_LIST_ID, $_PUT['id'], $_PUT['emailAddress'], $_PUT['firstName'], $_PUT['lastName'], $_PUT['province'], $_PUT['url']);
-      updateEmailOctopusDataLocally($_PUT['id'], EMAIL_OCTOPUS_LIST_ID, $emailOctopusContactId);
+      $emailOctopusContactId = addContactToList(SECRET_EMAIL_OCTOPUS_LIST_ID, $_PUT['id'], $_PUT['emailAddress'], $_PUT['firstName'], $_PUT['lastName'], $_PUT['province'], $_PUT['url']);
+      updateEmailOctopusDataLocally($_PUT['id'], SECRET_EMAIL_OCTOPUS_LIST_ID, $emailOctopusContactId);
     }
   }
 }
@@ -249,7 +247,7 @@ function addContactToList($id, $emailAddress, $firstName, $lastName, $province, 
     'fields'           => $fields,
     'status'           => 'SUBSCRIBED'
   ];
-  $response = httpPost('https://emailoctopus.com/api/1.5/lists/' . EMAIL_OCTOPUS_LIST_ID . '/contacts', $data);
+  $response = httpPost('https://emailoctopus.com/api/1.5/lists/' . SECRET_EMAIL_OCTOPUS_LIST_ID . '/contacts', $data);
   if (property_exists($response, 'id')) {
     return $response->id;
   }
@@ -260,7 +258,7 @@ function updateEmailOctopusDataLocally($id, $emailOctopusContactId)
 {
   global $liveDbLink;
   $sql = "UPDATE xxx_import_companies
-            SET emailOctopusListId = '" . EMAIL_OCTOPUS_LIST_ID . "',
+            SET emailOctopusListId = '" . SECRET_EMAIL_OCTOPUS_LIST_ID . "',
               emailOctopusContactId = '" . mysqli_real_escape_string($liveDbLink, $emailOctopusContactId) . "'
             WHERE id ='" . mysqli_real_escape_string($liveDbLink, $id) . "'";
   $liveDbLink->query($sql);
@@ -269,7 +267,7 @@ function updateEmailOctopusDataLocally($id, $emailOctopusContactId)
 function unsubscribeFromEmailOctopus($emailOctopusContactId)
 {
   $data = ['api_key' => SECRET_EMAIL_OCTOPUS_API_KEY, 'status' => 'UNSUBSCRIBED'];
-  httpPut('https://emailoctopus.com/api/1.5/lists/' . EMAIL_OCTOPUS_LIST_ID . '/contacts/' . $emailOctopusContactId, $data);
+  httpPut('https://emailoctopus.com/api/1.5/lists/' . SECRET_EMAIL_OCTOPUS_LIST_ID . '/contacts/' . $emailOctopusContactId, $data);
 }
 
 function updateEmailOctopusContact($emailOctopusListId, $emailOctopusContactId, $emailAddress, $firstName, $lastName, $url)
