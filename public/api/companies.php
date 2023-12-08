@@ -3,7 +3,7 @@
 //       The LOCAL code is used
 
 require __DIR__ . '/secrets.php';
-require __DIR__ . '/../helpers/http-verbs.php';
+require __DIR__ . '/http-verbs.php';
 
 DEFINE('EMAIL_OCTOPUS_LIST_ID', 'ebe8335f-e12c-11eb-96e5-06b4694bee2a');
 
