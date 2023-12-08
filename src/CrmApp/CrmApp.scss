@@ -1,0 +1,43 @@
+body {
+  padding: 10px;
+}
+
+.notes-textarea {
+  width: 100%;
+  height: calc(100vh - 380px) !important;
+}
+
+.list-companies {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 115px);
+  overflow-y: scroll;
+
+  .list-company {
+    padding-left: 1rem;
+    &:hover {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  }
+  .no-hover {
+    &:hover {
+      cursor: unset !important;
+      text-decoration: none !important;
+    }
+  }
+  .active {
+    background-color: lightgray;
+  }
+}
+
+.text-red {
+  color: red;
+  padding-left: 1rem;
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+}
