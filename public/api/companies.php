@@ -1,20 +1,13 @@
 <?php
 // Note: The LIVE database is used
 //       The LOCAL code is used
-// TODO: Changes in my db will get reflected in EmailOctopus. But if someone unsubscribes via EmailOctopus, how will my db know? Need to run "email-octopus-unsubscribe.php" once in a while.
-// TODO: a bunch of logic is common in this file and scripts/helpers/EmailOctopus.class.php
-require __DIR__ . '/../../app/library/secrets.php';
-require __DIR__ . '/../../app/library/database.php';
+
+require __DIR__ . '/secrets.php';
 require __DIR__ . '/../helpers/http-verbs.php';
-require __DIR__ . '/../helpers/validIps.php';
 
 DEFINE('EMAIL_OCTOPUS_LIST_ID', 'ebe8335f-e12c-11eb-96e5-06b4694bee2a');
 
-if (!in_array($_SERVER['REMOTE_ADDR'], $validIpAddresses)) {
-  die('Invalid request');
-}
-
-$liveDbLink = mysqli_connect('69.90.66.20', SECRET_CRM_DB_USER, SECRET_CRM_DB_PASS, SECRET_CRM_DB_NAME) or die('Database error: ' . mysqli_error($liveDbLink));
+$liveDbLink = mysqli_connect(SECRET_CRM_DB_SERVER, SECRET_CRM_DB_USER, SECRET_CRM_DB_PASS, SECRET_CRM_DB_NAME) or die('Database error: ' . mysqli_error($liveDbLink));
 
 switch ($_SERVER['REQUEST_METHOD']) {
   case 'GET':
